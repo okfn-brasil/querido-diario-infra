@@ -1,0 +1,54 @@
+---
+- name: Add podman repository
+  shell: "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_{{ansible_distribution_version}}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Add apt-key
+  shell: "wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_{{ansible_distribution_version}}/Release.key -O- | apt-key add -"
+
+- name: Upgrade everything
+  become: yes
+  shell: apt update -qq
+
+- name: Install podman
+  apt:
+      name: "podman"
+      state: present
+
+- name: Create /etc/diario
+  file:
+      path: "{{ diario_configdir }}"
+      state: directory
+
+- name: Create env var file
+  template:
+      src: env.j2
+      dest: "{{ diario_configdir }}/env"
+
+- name: Create data directory
+  file:
+      path: "{{ host_data_path }}"
+      state: directory
+
+- name: Install service file
+  template:
+      src: spider.service.j2
+      dest: "/etc/systemd/system/spider@.service"
+
+- name: Create cities spider
+  file:
+      src: "/etc/systemd/system/spider@.service"
+      dest: "/etc/systemd/system/spider@{{item}}.service"
+      state: link
+  loop: "{{cities}}"
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: Start cities spiders
+  systemd:
+      name: "spider@{{item}}.service"
+      state: started
+      enabled: yes
+  loop: "{{cities}}"
