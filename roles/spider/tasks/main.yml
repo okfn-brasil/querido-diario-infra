@@ -63,13 +63,19 @@
       state: link
   loop: "{{cities}}"
 
+- name: Create timer for the spiders
+  template:
+      src: spider.timer.j2
+      dest: "/etc/systemd/system/spider@{{item}}.timer"
+  loop: "{{cities}}"
+
+- name: Start timer for the spiders
+  systemd:
+      name: "spider@{{item}}.timer"
+      enabled: yes
+      state: started
+  loop: "{{cities}}"
+
 - name: Reload systemd daemon
   systemd:
     daemon_reload: yes
-
-- name: Start cities spiders
-  systemd:
-      name: "spider@{{item}}.service"
-      state: started
-      enabled: yes
-  loop: "{{cities}}"
