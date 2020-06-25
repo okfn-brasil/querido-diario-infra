@@ -15,6 +15,17 @@
       name: "podman"
       state: present
 
+- name: Create spider user group
+  group:
+      name: spider
+      gid: 1000
+
+- name: Create spider user
+  user:
+      name: spider
+      uid: 1000
+      group: spider
+
 - name: Create /etc/diario
   file:
       path: "{{ diario_configdir }}"
