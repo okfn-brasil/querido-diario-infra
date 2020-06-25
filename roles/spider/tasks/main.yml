@@ -40,6 +40,16 @@
   file:
       path: "{{ host_data_path }}"
       state: directory
+      owner: "spider"
+      group: "spider"
+
+- name: Create data directory for each city
+  file:
+      path: "{{ host_data_path }}/{{ item }}"
+      state: directory
+      owner: "spider"
+      group: "spider"
+  loop: "{{cities}}"
 
 - name: Install service file
   template:
