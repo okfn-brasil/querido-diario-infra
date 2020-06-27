@@ -1,9 +1,8 @@
 [Unit]
-Description=Run {{ item }} spider
+Description=Trigger the service to download the container image used by spiders
 
 [Timer]
 OnCalendar=daily
-RandomizedDelaySec=43200
 Persistent=true
 
 [Install]

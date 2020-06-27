@@ -5,8 +5,7 @@ Description=%i spider
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/podman stop %i-spider
 ExecStartPre=-/usr/bin/podman rm %i-spider
-ExecStartPre=/usr/bin/podman pull docker.io/serenata/diario-oficial
-ExecStart=/usr/bin/podman run --env-file {{ diario_configdir }}/env --rm --name %i-spider --volume {{ host_data_path }}/%i:/mnt/data --user {{ containeruser }} {{ container_image }}  bash -c "cd data_collection && scrapy crawl %i"
+ExecStart=/usr/bin/podman run --env-file {{ diario_configdir }}/env  --name %i-spider --volume {{ host_data_path }}/%i:/mnt/data --user {{ containeruser }} {{ container_image }}  bash -c "cd data_collection && scrapy crawl %i"
 
 [Install]
 WantedBy=multi-user.target

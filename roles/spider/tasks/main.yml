@@ -69,6 +69,20 @@
       dest: "/etc/systemd/system/spider@{{item}}.timer"
   loop: "{{cities}}"
 
+- name: install the service to download container image
+  template:
+      src: container_image_puller.service.j2
+      dest: "/etc/systemd/system/container_image_puller.service"
+
+- name: create timer to trigger the container image download
+  template:
+      src: container_image_puller.timer.j2
+      dest: "/etc/systemd/system/container_image_puller.timer"
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
 - name: Start timer for the spiders
   systemd:
       name: "spider@{{item}}.timer"
@@ -76,6 +90,9 @@
       state: started
   loop: "{{cities}}"
 
-- name: Reload systemd daemon
+- name: Start timer to download container image
   systemd:
-    daemon_reload: yes
+      name: "container_image_puller.timer"
+      enabled: yes
+      state: started
+
