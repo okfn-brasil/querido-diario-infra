@@ -6,3 +6,10 @@
       - vars/configure_spiders.yml
   roles:
       - spider
+
+- name: Restart spider timers
+  hosts: querido_diario
+  vars_files:
+      - vars/configure_spiders.yml
+  tasks:
+      - import_tasks: tasks/start_timers.yml
