@@ -3,6 +3,10 @@ container_image: "docker.io/serenata/diario-oficial:latest"
 host_data_path: "/var/diario/data"
 diario_configdir: "/etc/diario"
 containeruser: "gazette"
+timer:
+    oncalendar: "daily"
+    randomizeddelaysec: 43200
+
 
 postgres:
     username : "gazette"

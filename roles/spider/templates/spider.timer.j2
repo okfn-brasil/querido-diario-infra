@@ -1,9 +1,9 @@
 [Unit]
-Description=Run {{ item }} spider
+Description=Run %i spider
 
 [Timer]
-OnCalendar=daily
-RandomizedDelaySec=43200
+OnCalendar={{timer.oncalendar}}
+RandomizedDelaySec={{timer.randomizeddelaysec}}
 Persistent=true
 
 [Install]
