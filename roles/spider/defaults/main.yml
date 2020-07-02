@@ -7,6 +7,12 @@ timer:
     oncalendar: "daily"
     randomizeddelaysec: 43200
 
+#Digital Ocean spaces config
+FILES_STORE: ""
+AWS_ACCESS_KEY_ID: ""
+AWS_SECRET_ACCESS_KEY: ""
+AWS_ENDPOINT_URL: ""
+AWS_REGION_NAME: ""
 
 postgres:
     username : "gazette"
