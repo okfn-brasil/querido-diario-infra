@@ -1,15 +1,9 @@
 ---
 - name: Update servers
   hosts: querido_diario
-  become: no
+  become: yes
   vars_files:
       - vars/configure_spiders.yml
   roles:
+      - common
       - spider
-
-- name: Restart spider timers
-  hosts: querido_diario
-  vars_files:
-      - vars/configure_spiders.yml
-  tasks:
-      - import_tasks: tasks/start_timers.yml
