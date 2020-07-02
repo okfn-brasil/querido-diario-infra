@@ -1,98 +1,37 @@
 ---
-- name: Add podman repository
-  shell: "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_{{ansible_distribution_version}}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
-  when: ansible_distribution == "Ubuntu"
-
-- name: Add apt-key
-  shell: "wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_{{ansible_distribution_version}}/Release.key -O- | apt-key add -"
-
-- name: Upgrade everything
-  become: yes
-  shell: apt update -qq
-
-- name: Install podman
-  apt:
-      name: "podman"
-      state: present
-
-- name: Create spider user group
+- name: create spider user group
   group:
       name: spider
       gid: 1000
 
-- name: Create spider user
+- name: create spider user
   user:
       name: spider
       uid: 1000
       group: spider
 
-- name: Create /etc/diario
+- name: create /etc/diario
   file:
       path: "{{ diario_configdir }}"
       state: directory
 
-- name: Create env var file
+- name: create env var file
   template:
       src: env.j2
       dest: "{{ diario_configdir }}/env"
 
-- name: Create data directory
-  file:
-      path: "{{ host_data_path }}"
-      state: directory
-      owner: "spider"
-      group: "spider"
+- import_tasks: create_data_directories.yaml
 
-- name: Create data directory for each city
-  file:
-      path: "{{ host_data_path }}/{{ item }}"
-      state: directory
-      owner: "spider"
-      group: "spider"
-  loop: "{{cities}}"
+- import_tasks: delete_systemd_service_files.yaml
 
-- name: Install service file
-  template:
-      src: spider.service.j2
-      dest: "/etc/systemd/system/spider@.service"
+- import_tasks: install_base_service_files.yaml
 
-- name: Create cities spider
-  file:
-      src: "/etc/systemd/system/spider@.service"
-      dest: "/etc/systemd/system/spider@{{item}}.service"
-      state: link
-  loop: "{{cities}}"
+- import_tasks: install_image_puller_service.yaml
 
-- name: Create timer for the spiders
-  template:
-      src: spider.timer.j2
-      dest: "/etc/systemd/system/spider@{{item}}.timer"
-  loop: "{{cities}}"
-
-- name: install the service to download container image
-  template:
-      src: container_image_puller.service.j2
-      dest: "/etc/systemd/system/container_image_puller.service"
-
-- name: create timer to trigger the container image download
-  template:
-      src: container_image_puller.timer.j2
-      dest: "/etc/systemd/system/container_image_puller.timer"
-
-- name: Reload systemd daemon
+- name: reload systemd daemon
   systemd:
     daemon_reload: yes
 
-- name: Start timer for the spiders
-  systemd:
-      name: "spider@{{item}}.timer"
-      enabled: yes
-      state: started
-  loop: "{{cities}}"
+- import_tasks: start_timers.yaml
 
-- name: Start timer to download container image
-  systemd:
-      name: "container_image_puller.timer"
-      enabled: yes
-      state: started
 
