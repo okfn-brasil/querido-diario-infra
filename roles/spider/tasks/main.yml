@@ -10,15 +10,7 @@
       uid: 1000
       group: spider
 
-- name: create /etc/diario
-  file:
-      path: "{{ diario_configdir }}"
-      state: directory
-
-- name: create env var file
-  template:
-      src: env.j2
-      dest: "{{ diario_configdir }}/env"
+- import_tasks: create_config_files.yaml
 
 - import_tasks: create_data_directories.yaml
 

@@ -5,7 +5,7 @@ Description=%i spider
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/podman stop %i-spider
 ExecStartPre=-/usr/bin/podman rm %i-spider
-ExecStart=/usr/bin/podman run --env-file {{ diario_configdir }}/env  --name %i-spider --volume {{ host_data_path }}/%i:/mnt/data --user {{ containeruser }} {{ container_image }}  bash -c "cd data_collection && scrapy crawl %i -s FILES_STORE={{FILES_STORE}}/%i -s AWS_ACCESS_KEY_ID={{AWS_ACCESS_KEY_ID}} -s AWS_SECRET_ACCESS_KEY={{AWS_SECRET_ACCESS_KEY}} -s AWS_ENDPOINT_URL={{AWS_ENDPOINT_URL}} -s AWS_REGION_NAME={{AWS_REGION_NAME}}"
+ExecStart=/usr/bin/podman run --env-file {{ diario_configdir }}/env  --name %i-spider --volume {{diario_configdir}}/settings.py:/mnt/code/data_collection/gazette/settings.py:ro --volume {{ host_data_path }}/%i:/mnt/data --user {{ containeruser }} {{ container_image }}  bash -c "cd data_collection && scrapy crawl -s FILES_STORE={{FILES_STORE}}/%i/ %i"
 
 [Install]
 WantedBy=multi-user.target
