@@ -7,7 +7,7 @@ timer:
     oncalendar: "daily"
     randomizeddelaysec: 43200
 
-ITEM_PIPELINES: "{\"gazette.pipelines.GazetteDateFilteringPipeline\": 50, \"scrapy.pipelines.files.FilesPipeline\": 100,}"
+ITEM_PIPELINES: "{\"gazette.pipelines.GazetteDateFilteringPipeline\": 50, \"gazette.pipelines.QueridoDiarioFilesPipeline\": 100,}"
 SPIDER_MIDDLEWARES: "{\"scrapy_deltafetch.DeltaFetch\": 100}"
 
 #Digital Ocean spaces config
