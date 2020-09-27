@@ -1,0 +1,15 @@
+---
+- name: Update Querido Diario API
+  hosts: querido_diario_api
+  become: yes
+  vars_files:
+      - vars/api.yaml
+
+  tasks:
+
+    - import_tasks: tasks/stop_querido_diario_api.yaml
+
+    - import_tasks: tasks/update_api_container_image.yaml
+
+    - import_tasks: tasks/start_querido_diario_api.yaml
+

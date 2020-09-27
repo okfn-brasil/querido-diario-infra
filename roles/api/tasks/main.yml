@@ -1,0 +1,17 @@
+---
+- name: create API user group
+  group:
+      name: "{{CONTAINER_USER}}"
+
+- name: create API user
+  user:
+      name: "{{CONTAINER_USER}}"
+      group: "{{CONTAINER_USER}}"
+
+- import_tasks: create_config_files.yaml
+
+- import_tasks: install_base_service_files.yaml
+
+- import_tasks: start_querido_diario_api.yaml
+
+

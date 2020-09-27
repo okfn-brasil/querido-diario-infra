@@ -1,0 +1,6 @@
+---
+- name: stop Querido Diario API
+  systemd:
+      name: "querido-diario-api.service"
+      state: stopped
+

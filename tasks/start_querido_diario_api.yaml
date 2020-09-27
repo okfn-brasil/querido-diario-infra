@@ -1,0 +1,7 @@
+---
+- name: start Querido Diário API
+  systemd:
+      name: "querido-diario-api.service"
+      enabled: yes
+      state: started
+

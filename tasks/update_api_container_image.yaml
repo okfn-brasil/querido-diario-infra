@@ -1,0 +1,6 @@
+---
+
+- name: update Querido Diario container image
+  command:
+    cmd: "podman pull docker.io/{{IMAGE_NAME}}:{{IMAGE_TAG}}"
+

@@ -1,0 +1,11 @@
+---
+
+- name: reload systemd daemon
+  systemd:
+    daemon_reload: yes
+
+- name: start Querido Diário API
+  systemd:
+      name: "querido-diario-api.service"
+      enabled: yes
+      state: started

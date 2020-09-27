@@ -1,0 +1,10 @@
+- name: create /etc/diario
+  file:
+      path: "{{ DIARIO_CONFIGDIR }}"
+      state: directory
+
+- name: create env var file
+  template:
+      src: querido-diario-api-env.j2
+      dest: "{{ DIARIO_CONFIGDIR }}/{{ENV_FILE}}"
+

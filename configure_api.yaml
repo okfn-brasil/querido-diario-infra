@@ -1,0 +1,9 @@
+---
+- name: Configure Querido Diário API
+  hosts: querido_diario_api
+  become: yes
+  vars_files:
+      - vars/api.yaml
+  roles:
+      - common
+      - api

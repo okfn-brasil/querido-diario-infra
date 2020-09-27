@@ -1,0 +1,11 @@
+[Unit]
+Description=Querido diario API
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/podman stop {{CONTAINER_NAME}}
+ExecStartPre=-/usr/bin/podman rm {{CONTAINER_NAME}}
+ExecStart=/usr/bin/podman run -d --name {{CONTAINER_NAME}} --publish {{API_PORT}}:{{API_PORT}} --user={{CONTAINER_USER}} --env-file {{DIARIO_CONFIGDIR}}/{{ENV_FILE}} {{IMAGE_NAME}}:{{IMAGE_TAG}} {{CONTAINER_COMMAND}}
+
+[Install]
+WantedBy=multi-user.target

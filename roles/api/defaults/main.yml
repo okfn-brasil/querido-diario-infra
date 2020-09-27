@@ -1,0 +1,12 @@
+---
+API_PORT: 8080
+CONTAINER_COMMAND: "python main"
+CONTAINER_NAME: "queridodiarioapi"
+CONTAINER_USER: "gazette"
+DIARIO_CONFIGDIR: "/etc/querido-diario"
+ENV_FILE: "api-env-file"
+IMAGE_NAME: "serenata/querido-diario-api"
+IMAGE_TAG: "latest"
+PYTHONPATH: "/mnt/code"
+QUERIDO_DIARIO_ELASTICSEARCH_HOST: ""
+QUERIDO_DIARIO_ELASTICSEARCH_INDEX: "gazettes"
