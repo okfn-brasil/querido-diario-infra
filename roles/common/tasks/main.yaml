@@ -1,8 +1,0 @@
-- debug:
-    msg: "Target distribution: {{ ansible_distribution }}"
-
-- debug:
-    msg: "Target distribution: {{ ansible_facts['distribution_major_version'] }}"
-
-- import_tasks: ubuntu.yaml
-  when: ansible_distribution == "Ubuntu"

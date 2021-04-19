@@ -1,8 +1,0 @@
----
-- name: Configure spiders
-  hosts: querido_diario
-  become: yes
-  vars_files:
-      - vars/configure_spiders.yml
-  roles:
-      - spider
