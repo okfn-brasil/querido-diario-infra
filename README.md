@@ -1,5 +1,5 @@
-querido-diario-automation
-=========================
+querido-diario-infra
+====================
 
 This repository contains the Ansible script to deploy the spiders created in the 
 Querido Diário project. It installs the packages necessary to run the spiders
