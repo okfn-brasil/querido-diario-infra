@@ -1,75 +1,79 @@
 querido-diario-automation
 =========================
 
-This repository contains the Ansible script to deploy the spiders created in the 
-Querido Diário project. It installs the packages necessary to run the spiders
-and installs systemd services to run the spiders.
+This repository contains a bunch of different script to deploy the infrastructure
+used in the Querido Diário project. Terraform is used to deploy all the Digital 
+Ocean infrastructure used to run the workloads. The Terraform script deploy a
+database, Kubernetes cluster, digital ocean spaces (s3ish storage) and everything
+necessary to support the project applications.
+
+Once you have the base infrastructure in place, Helm charts are used to deploy 
+the some applications required to run our workloads.
 
 
-#### How to use it?
+# How to use it?
 
-The deploys is done using Ansible. For that, you need to launch your server 
-some where, configure ansible to access it and run the playbook
-
-### Inventory
-
-The playbooks expects a "querido_diario" group. So, first of all you need to 
-configure the inventory. There a bunch of different ways to do that. You can 
-check the [Ansible documentation](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html) 
-and choose what is better for you. One of the simplest way is have a simple 
-file with the inventory. Something like this:
-
-```
-[querido_diario]
-161.35.151.103
-```
-
-After you setup the inventory, you can test the access with the following 
-command:
+First of all, it is necessary sipping up the base infrastructure. For that, you 
+can go to the `terraform` directory and initialize the Terraform working directory.
+It will create some initial files, downloads providers and everything else that 
+is necessary to run the deploy. After the initialization, you can run the command
+to ask Terraform to plan the changes in your infrastructure and then, apply it. 
+All the commands for the previously described process is:
 
 ```bash
-ansible -i inventoryfile -m ping querido_diario
+terraform init
+terraform plan
+terraform apply
 ```
 
-### Variables
-
-The default scrapy pipeline configured by these scripts only download the 
-gazette files and upload them to a remote storage system. The only one which 
-has been tested is the Digital Ocean Spaces which works with the S3 protocol. 
-For this reason, it is necessary define the variables with the access information. 
-
-All the available variables and their default values can be found at the 
-roles/spider/defaults/main.yml. The playbooks already define the variables 
-files at vars/configure_spiders.yml. Thus, you can just update the file with 
-the variables and run the playbook.
-
-The variables to configure the S3ish storage system are:
-
-```
-#Digital Ocean spaces config
-AWS_ACCESS_KEY_ID: ""
-AWS_SECRET_ACCESS_KEY: ""
-AWS_ENDPOINT_URL: ""
-AWS_REGION_NAME: ""
-```
-
-You should be able to get this info from your PaaS provider.
-
-### Playbooks
-
-After configure the inventory and the variables values (if needed), you can
-run the playbooks to configure the server. There are two playbooks available,
-the `configure_everything.yaml` and `configure_spider.yaml`. The 
-`configure_everything.yaml` installs all the packages necessary to run the 
-spiders, updates all the packages, creates user and install the systemd services
-and timers to run the spiders very day. `configure_spider.yaml` reconfigures the
-systemd services and timer. But it does not reconfigure the host machine. To
-run the playbook the following command can be used:
+After this process, if everything run successfully, you will have a kubeconfig
+file inside the `terraform` directory. This file, give you access to the Kubernetes
+cluster deployed. This file is used in the further step to install some base 
+applications needed by the project. For that, you export the `KUBECONFIG` environment
+variable or copy the file to the `$HOME/.kube/config` file. To export the environment
+variable you can use a command similar to this:
 
 ```bash
-ansible-playbook -i inventoryfile configure_everything.yaml
-# OR
-ansible-playbook -i inventoryfile configure_spider.yaml
+export KUBECONFIG=/path/to/the/querido-diario-automation/repo/terraform/kubeconfig
 ```
 
+Once you did that, if you have the `kubectl` installed in the local machine, check
+if you have access to the cluster:
+
+```bash
+kubectl get nodes
+```
+
+Now you have the infrastructure in place, you can start deploy some apps in the
+cluster. In this documentation we will show how to deploy two requirements to run
+the Querido Diário project: Nginx ingress controller and Elasticsearch.
+
+## Nginx Ingress Controller
+
+Nginx ingress controller is used to give access to services running inside the cluster
+to the external world. For that, we will create some required resources to run 
+in our cloud provider (Digital Ocean) and than run the helm command to install 
+the Nginx Ingress Controller chart:
+
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.46.0/deploy/static/provider/do/deploy.yaml
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+helm install ingress-nginx ingress-nginx/ingress-nginx
+```
+
+## Elasticsearch
+
+Elasticsearch (a.k.a. ES) is our search index of choice. Querido Diário index all the crawled
+documents in a ES index. So, we need to deploy it in our cluster as well. We will use
+again the Helm chart available in the Elastic (ES main developer) repository:
+
+```
+helm repo add elastic https://helm.elastic.co
+helm install elasticsearch --version 7.12.1 elastic/elasticsearch
+```
+
+Once you follow all these steps you should have the base infrastructure used to 
+run Querido Diário workloads. 
 

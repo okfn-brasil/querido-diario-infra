@@ -1,9 +1,0 @@
-[Unit]
-Description=Download container image used by spiders
-
-[Service]
-TimeoutStartSec=0
-ExecStart=/usr/bin/podman pull {{ container_image }}
-
-[Install]
-WantedBy=multi-user.target
