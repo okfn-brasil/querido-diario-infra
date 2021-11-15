@@ -1,7 +1,0 @@
----
-- name: Trigger timer for the spiders
-  systemd:
-      name: "spider@{{item}}.timer"
-      enabled: yes
-      state: restarted
-  loop: "{{cities}}"

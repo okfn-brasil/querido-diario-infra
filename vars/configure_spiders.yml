@@ -1,7 +1,0 @@
-# Set your S3 access information
-FILES_STORE: ""
-AWS_ENDPOINT_URL: ""
-AWS_ACCESS_KEY_ID: ""
-AWS_SECRET_ACCESS_KEY: ""
-AWS_REGION_NAME: ""
-

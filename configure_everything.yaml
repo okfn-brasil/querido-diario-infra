@@ -1,9 +1,0 @@
----
-- name: Update servers
-  hosts: querido_diario
-  become: yes
-  vars_files:
-      - vars/configure_spiders.yml
-  roles:
-      - common
-      - spider
