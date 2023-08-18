@@ -5,7 +5,7 @@
   </a>
 </p>
 
-# Querido Diário Backend (operações internas)
+# Infra
 Dentro do [ecossistema do Querido Diário](https://github.com/okfn-brasil/querido-diario-comunidade/blob/main/.github/CONTRIBUTING.md#ecossistema-do-querido-di%C3%A1rio), este repositório é o responsável pelos *scripts* de implantação da infraestrutura do **[Querido Diário](https://queridodiario.ok.org.br/)**.
 
 Conheça mais sobre as [tecnologias](https://queridodiario.ok.org.br/tecnologia) e a [história](https://queridodiario.ok.org.br/sobre) do projeto.
